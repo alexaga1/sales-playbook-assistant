@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sales Playbook Assistant</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 20px; color: #1a1a1a; }
+  h1 { font-size: 26px; margin-bottom: 4px; }
+  p.sub { color: #555; margin-top: 0; }
+  form { display: flex; gap: 8px; margin: 20px 0; }
+  input { flex: 1; padding: 10px; font-size: 16px; }
+  button { padding: 10px 18px; font-size: 16px; cursor: pointer; }
+  .answer { background: #f4f7f4; border-left: 4px solid #2e7d32; padding: 14px 16px; margin: 16px 0; white-space: pre-wrap; }
+  .source { border: 1px solid #ddd; border-radius: 6px; padding: 10px 14px; margin: 8px 0; }
+  .source b { display: block; margin-bottom: 4px; }
+  .source span { color: #666; font-size: 13px; }
+  .tries button { font-size: 13px; padding: 6px 10px; margin: 0 6px 6px 0; }
+</style>
+</head>
+<body>
+<h1>Sales Playbook Assistant</h1>
+<p class="sub">Ask anything about Northwind Supply Co. — pricing, onboarding, integrations, security, returns, troubleshooting. Answers come from the company's own docs, with sources cited.</p>
+<form id="ask-form">
+  <input id="q" type="text" placeholder="e.g. How much does the Pro plan cost?" autocomplete="off" autofocus>
+  <button type="submit">Ask</button>
+</form>
+<div class="tries">
+  <button data-q="How much does the Pro plan cost?">Pro plan cost</button>
+  <button data-q="How long does Enterprise implementation take?">Implementation timeline</button>
+  <button data-q="What do I do when orders stop syncing?">Orders not syncing</button>
+  <button data-q="What is the return policy?">Return policy</button>
+  <button data-q="Does it integrate with Salesforce?">Salesforce integration</button>
+</div>
+<div id="result"></div>
+<script>
+const form = document.getElementById('ask-form');
+const input = document.getElementById('q');
+const result = document.getElementById('result');
+async function ask(question) {
+  result.innerHTML = '<p>Searching the knowledge base…</p>';
+  const res = await fetch('/api/ask', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({question})
+  });
+  const data = await res.json();
+  let html = '<div class="answer">' + data.answer + '</div>';
+  if (data.sources && data.sources.length) {
+    html += '<h3>Sources</h3>';
+    for (const s of data.sources) {
+      html += '<div class="source"><b>' + s.source + ' &rsaquo; ' + s.section + '</b><span>relevance ' + s.score + '</span></div>';
+    }
+  }
+  result.innerHTML = html;
+}
+form.addEventListener('submit', e => { e.preventDefault(); if (input.value.trim()) ask(input.value.trim()); });
+document.querySelectorAll('.tries button').forEach(b => b.addEventListener('click', () => { input.value = b.dataset.q; ask(b.dataset.q); }));
+</script>
+</body>
+</html>

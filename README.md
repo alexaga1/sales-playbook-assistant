@@ -57,12 +57,3 @@ data/               the knowledge base (8 fictional company docs)
 demo_questions.txt  questions to try
 requirements.txt    flask, scikit-learn
 ```
-
-## Next steps (if you want to go further)
-
-1. Plug in an LLM for generative answers (needs an API key).
-2. Swap TF-IDF for embeddings (e.g. sentence-transformers) for
-   meaning-based rather than word-based matching.
-3. Deploy it (Render, Railway, or AWS free tier) so there's a live link on
-   your resume.
-4. Put it on GitHub and add a Projects line to your resume.

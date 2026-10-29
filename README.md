@@ -58,16 +58,6 @@ demo_questions.txt  questions to try
 requirements.txt    flask, scikit-learn
 ```
 
-## How to talk about it in interviews
-
-- "I built the retrieval half of a RAG system: ingest, chunk, index, rank,
-  cite. It runs locally with no API key."
-- "It answers only from the knowledge base and says when it doesn't know —
-  grounding matters more than fluency for customer-facing deployments."
-- "The next step is plugging an LLM into `generate_answer()` and deploying
-  it, then iterating on retrieval quality from real user questions — that's
-  the forward-deployed loop."
-
 ## Next steps (if you want to go further)
 
 1. Plug in an LLM for generative answers (needs an API key).
